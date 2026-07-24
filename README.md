@@ -1,47 +1,85 @@
-AMBA APB3 Protocol Implementation on Basys 3
-Description
+🚀 AMBA APB3 Protocol Implementation on Basys 3
+📖 Overview
 
-The AMBA APB3 Protocol Implementation is an FPGA-based digital design project developed on the Basys 3 (Artix-7) FPGA board using Verilog HDL. The project implements the Advanced Peripheral Bus (APB3) protocol, a part of the ARM AMBA (Advanced Microcontroller Bus Architecture) specification, which is widely used for connecting low-bandwidth peripherals such as UART, GPIO, Timers, SPI, I²C, and OLED displays in System-on-Chip (SoC) designs.
+The AMBA APB3 Protocol Implementation is a complete FPGA-based communication system developed on the Basys 3 (Artix-7) FPGA using Verilog HDL. This project recreates the behavior of the ARM AMBA APB3 (Advanced Peripheral Bus), a widely adopted on-chip communication protocol used to connect low-bandwidth peripherals such as UART, SPI, I²C, GPIO, Timers, OLED Displays, and other embedded devices to a processor.
 
-The design models the complete APB3 communication process using a Finite State Machine (FSM) with the three standard protocol states: IDLE, SETUP, and ACCESS. During operation, the APB master initiates a transaction by asserting PSEL, places the address and control information on the bus, and then enables the transfer using PENABLE. The selected APB slave responds with PREADY to indicate the completion of the transaction, while PSLVERR is used to report invalid or unsuccessful transfers.
+Designed with a modular and scalable architecture, the implementation accurately models the APB3 communication process through the protocol's three standard operating states: IDLE, SETUP, and ACCESS. Each transaction follows the official APB timing sequence, ensuring reliable communication between the APB Master and APB Slave while maintaining protocol compliance.
 
-The implementation supports both read and write operations. For write transactions, the master transfers data through the PWDATA bus, while for read transactions the slave returns data on the PRDATA bus. The design also includes address decoding, allowing different peripherals to be selected based on the address provided by the APB master. This makes the architecture scalable and suitable for integrating multiple peripherals into a single FPGA-based embedded system.
+The controller supports both read and write transactions. During a write operation, the master places the target address and data on the bus before enabling the transfer. For read operations, the slave retrieves data from the selected peripheral and returns it through the read data bus. The design incorporates address decoding, enabling the master to communicate with multiple peripherals using unique address locations. This architecture closely resembles the communication mechanism used in modern ARM-based System-on-Chip (SoC) designs.
 
-The project was designed using a modular architecture, where each functional block—including the APB master, APB slave, address decoder, and peripheral interface—is implemented as an independent Verilog module. This modular approach improves readability, simplifies debugging, and enables future expansion by adding new APB-compatible peripherals.
+To improve reliability, the implementation includes wait-state generation through the PREADY signal, allowing slower peripherals to delay a transaction until they are ready. Additionally, PSLVERR is implemented to detect and report invalid accesses or unsupported operations, demonstrating practical bus error handling.
 
-The entire system was designed, simulated, synthesized, and implemented using Xilinx Vivado. Functional verification was performed through simulation and waveform analysis to validate protocol timing, FSM state transitions, read/write operations, wait-state handling, and error detection before deploying the design to the Basys 3 FPGA for hardware verification.
+The entire project is built using independent Verilog modules, making it highly reusable, maintainable, and easy to extend. Components such as the APB Master, APB Slave, Address Decoder, and Peripheral Interface are designed separately, allowing new peripherals to be integrated with minimal modifications.
 
-✨ Key Features
-🔗 Complete AMBA APB3 protocol implementation
-⚙️ FSM-based IDLE → SETUP → ACCESS state transitions
+The design was simulated, synthesized, and implemented using Xilinx Vivado, followed by hardware validation on the Basys 3 FPGA. Functional verification through simulation confirms correct protocol timing, FSM state transitions, read/write operations, peripheral selection, wait-state behavior, and error handling, while hardware testing demonstrates successful real-time execution on the FPGA.
+
+✨ Features
+🔗 Complete ARM AMBA APB3 Protocol implementation
+⚙️ FSM-based communication with IDLE → SETUP → ACCESS state transitions
 📖 Supports both Read and Write transactions
-📍 Address decoding for peripheral selection
-📡 Standard APB3 signals (PSEL, PENABLE, PREADY, PWRITE, PADDR, PWDATA, PRDATA, PSLVERR)
-🚨 Error handling using PSLVERR
-⏳ Wait-state support using PREADY
-🧩 Modular Verilog HDL design for easy scalability
-🧪 Functional simulation and waveform verification
+📍 Address decoding for selecting multiple peripherals
+📡 Standard APB3 interface signals:
+PADDR
+PWDATA
+PRDATA
+PSEL
+PENABLE
+PWRITE
+PREADY
+PSLVERR
+⏳ Wait-state handling for slow peripherals
+🚨 Error detection using PSLVERR
+🧩 Modular and reusable Verilog HDL architecture
+🧪 Simulation and waveform verification
 💻 Hardware implementation on the Basys 3 FPGA
 🛠️ Developed using Xilinx Vivado
+🏗️ Project Architecture
+                  +----------------------+
+                  |      APB Master      |
+                  +----------+-----------+
+                             |
+     ---------------------------------------------------------
+     |        |         |         |         |                |
+   PADDR   PWDATA     PSEL    PENABLE   PWRITE
+     |        |         |         |         |
+     ---------------- APB BUS ----------------
+                             |
+                  +----------+-----------+
+                  |      APB Slave       |
+                  +----------+-----------+
+                             |
+                    Address Decoder
+                             |
+          -----------------------------------------
+          |            |             |            |
+        UART         GPIO         SPI/I²C       OLED
+          |            |             |            |
+       PRDATA       PREADY       PSLVERR      Outputs
 🛠️ Technologies Used
-FPGA Board: Basys 3 (Artix-7)
-HDL: Verilog HDL
-Protocol: ARM AMBA APB3
-Design Tool: Xilinx Vivado
-Design Methodology: Finite State Machine (FSM)
-Verification: Simulation and Hardware Testing
+Category	Technology
+FPGA Board	Basys 3 (Artix-7)
+Hardware Description Language	Verilog HDL
+Bus Protocol	ARM AMBA APB3
+Development Tool	Xilinx Vivado
+Design Methodology	Finite State Machine (FSM)
+Verification	Simulation & Hardware Testing
 🎯 Learning Outcomes
 
-This project provides hands-on experience with:
+This project provides practical experience in:
 
-AMBA APB3 bus architecture
-Bus protocol implementation on FPGA
+ARM AMBA APB3 bus architecture
+FPGA-based communication protocols
 Finite State Machine (FSM) design
 Address decoding techniques
 Read and write transaction handling
-Peripheral interfacing
+Wait-state implementation
+Bus error detection and handling
+Modular hardware design
 Verilog HDL development
-FPGA synthesis, implementation, and debugging using Vivado
-Hardware verification on the Basys 3 board
+FPGA synthesis, implementation, and debugging
+Hardware validation on the Basys 3 board
+🌟 Why This Project?
 
-This project demonstrates a complete FPGA implementation of the AMBA APB3 protocol, providing a scalable foundation for building SoC-style embedded systems where multiple peripherals communicate through a standardized bus interface. It serves as an excellent stepping stone toward implementing more advanced AMBA protocols such as AHB and AXI.
+Unlike a simple APB controller demonstration, this implementation models the complete APB3 transaction flow—from address decoding and master-slave handshaking to read/write transfers, wait-state support, and error detection. Its modular architecture makes it easy to extend with additional peripherals, making it a strong foundation for future SoC, embedded systems, and FPGA communication projects.
+
+By implementing the AMBA APB3 protocol entirely in hardware, this project demonstrates how modern processors communicate with peripherals through a standardized bus interface. It bridges the gap between digital design fundamentals and real-world embedded system architecture, providing a scalable platform for integrating peripherals such as UART, SPI, I²C, GPIO, timers, and displays into FPGA-based systems.
